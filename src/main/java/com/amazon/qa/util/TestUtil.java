@@ -4,6 +4,7 @@ import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.factory.DriverFactory;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -35,11 +36,19 @@ public class TestUtil extends BaseTest {
     }
 
     public static boolean checkElementExists(List<WebElement> elements){
-        return elements.size() == 1 && elements.get(0).isDisplayed();
+
+        if ( elements.size() == 1 ){
+            WebDriverWait w = new WebDriverWait(driver,10);
+            w.until(ExpectedConditions.visibilityOf(elements.get(0)));
+            return true;
+        }
+            return false;
     }
 
   public static void checkElementExistsAndClick(List<WebElement> elements){
-      if (elements.size() > 0)
+        if (elements.size() > 0){
           elements.get(0).click();
+      }
+
   }
 }

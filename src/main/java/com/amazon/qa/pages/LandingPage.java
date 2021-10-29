@@ -1,25 +1,20 @@
 package com.amazon.qa.pages;
 
 import com.amazon.qa.util.TestUtil;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import com.amazon.qa.base.BaseTest;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class LandingPage extends BaseTest {
+    WebDriver driver;
     @FindBy(id="nav-link-accountList-nav-line-1")
     private WebElement signInButton;
-
 
 
     @FindBy(id="twotabsearchtextbox")
@@ -36,16 +31,16 @@ public class LandingPage extends BaseTest {
     @FindBy(id="glow-ingress-line2")
     private WebElement existingDeliveryLocation;
 
-    @FindBy(xpath="//input[@data-action='GLUXPostalInputAction']")
-    private WebElement pinCode;
+    @FindBy(id="GLUXZipUpdateInput")
+    private WebElement zipCodeField;
 
     @FindBy(css="div[role='button']")
     private WebElement zipApplyButton;
 
-    @FindBy (css="div[class='a-popover-footer'] input[id='GLUXConfirmClose']")
-    private WebElement confirmClose;
+    @FindBy (name="glowDoneButton")
+    private WebElement doneButton;
 
-    @FindBy(css="a[data-nav-role='signin']")
+    @FindBy(id="nav-link-accountList")
     private List<WebElement> signInMsg;
 
     @FindBy(id="nav-item-signout")
@@ -57,8 +52,13 @@ public class LandingPage extends BaseTest {
     @FindBy(id="GLUXZipError")
     private List<WebElement> wrongZipCode;
 
-    public LandingPage() {
-        super();
+    @FindBy(id="GLUXChangePostalCodeLink")
+    private List<WebElement> changeZipCode;
+
+
+    public LandingPage(WebDriver driver) {
+     //   super();
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
@@ -67,19 +67,24 @@ public class LandingPage extends BaseTest {
      //If delivery location is not already selected
       if(!existingDeliveryLocation.getText().contains(zipCode)){
           deliveryLocation.click();
-          pinCode.sendKeys(zipCode);
+          if(TestUtil.checkElementExists(changeZipCode)) {
+              changeZipCode.get(0).click();
+              zipCodeField.clear();
+          }
+          zipCodeField.sendKeys(zipCode);
+          TestUtil.sleepForNSeconds(2);
           zipApplyButton.click();
           if (TestUtil.checkElementExists(wrongZipCode)
                   && wrongZipCode.get(0).getAttribute("innerText").equals("Please enter a valid US zip code")) {
               throw new IllegalStateException("Wrong zip code entered");
           }
-          confirmClose.click();
+          doneButton.click();
       }
 
     }
 
     public void userSignIn(String username,String password){
-        SignInPage signInPage  = new SignInPage();
+        SignInPage signInPage  = new SignInPage(driver);
         clickSignIn();
         signInPage.enterEmailAndPassword(username,password);
     }
@@ -113,9 +118,13 @@ public class LandingPage extends BaseTest {
 
      public void userSignOut(){
          Actions action  =new Actions(driver);
-
          action.moveToElement(signInMsg.get(0)).build().perform();
          signOut.click();
+//         if (TestUtil.checkElementExists(signInMsg))
+//             System.out.println("Signout successful");
+//         else
+//             System.out.println("Signout unsuccessful. May impact next tests");
+
      }
 
      public boolean checkUserSignedIn(){

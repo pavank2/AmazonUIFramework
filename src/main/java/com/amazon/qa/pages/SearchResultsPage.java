@@ -4,6 +4,7 @@ import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.util.TestUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -14,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class SearchResultsPage extends BaseTest {
-
+   WebDriver driver;
     @FindBy(css = "li[aria-label='Free Shipping by Amazon']")
     private List<WebElement> freeShipping;
 
@@ -33,14 +34,17 @@ public class SearchResultsPage extends BaseTest {
     @FindBy(id="add-to-cart-button")
     private WebElement addToCart;
 
+    @FindBy(xpath="//span[contains(text(),'Added to Cart')]")
+    private List<WebElement> cartAddSuccess;
 
-    public SearchResultsPage() {
-        super();
+
+    public SearchResultsPage(WebDriver driver ) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
     public float selectCheapestChocolate(String choc){
-       if (choc == "Mars" && freeShipping.size() > 0)
+       if (choc == "Mars" && TestUtil.checkElementExists(freeShipping))
          freeShipping.get(0).click();
        if (choc == "Mars")
             marsCheckBox.click();
@@ -72,6 +76,10 @@ public class SearchResultsPage extends BaseTest {
         WebDriverWait w = new WebDriverWait(driver,10);
         w.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-to-cart-button")));
         addToCart.click();
+        if (!TestUtil.checkElementExists(cartAddSuccess)) {
+            System.out.println("ALERT!"+choc+" not added to cart");
+            minPrice = 0;
+        }
         return minPrice;
     }
 

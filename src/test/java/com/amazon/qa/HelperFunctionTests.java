@@ -5,6 +5,7 @@ import com.amazon.qa.pages.LandingPage;
 import com.amazon.qa.pages.SearchResultsPage;
 import com.amazon.qa.pages.ShoppingCartPage;
 import com.amazon.qa.pages.SignInPage;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -17,13 +18,14 @@ public class HelperFunctionTests extends BaseTest {
     SignInPage signInPage;
     ShoppingCartPage shoppingCart;
     SearchResultsPage searchResults;
+    WebDriver driver;
     @BeforeClass
     public void setup() throws Throwable {
-        base.initialize();
-        landingPage = new LandingPage();
-        signInPage = new SignInPage();
-        shoppingCart = new ShoppingCartPage();
-        searchResults = new SearchResultsPage();
+        driver = base.initialize();
+        landingPage = new LandingPage(driver);
+        signInPage = new SignInPage(driver);
+        shoppingCart = new ShoppingCartPage(driver);
+        searchResults = new SearchResultsPage(driver);
 
     }
 

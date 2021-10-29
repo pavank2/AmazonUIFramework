@@ -5,30 +5,32 @@ import com.amazon.qa.pages.LandingPage;
 import com.amazon.qa.pages.SearchResultsPage;
 import com.amazon.qa.pages.ShoppingCartPage;
 import com.amazon.qa.pages.SignInPage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.logging.Logger;
 
 public class CorePathTests extends BaseTest {
     BaseTest base = new BaseTest();
-
+    WebDriver driver;
     LandingPage landingPage;
     SignInPage signInPage;
     ShoppingCartPage shoppingCart;
     SearchResultsPage searchResults;
+    static Logger log = Logger.getLogger(CorePathTests.class.getName());
+
     @BeforeClass
     public void setup() throws Throwable {
-        base.initialize();
-        landingPage = new LandingPage();
-        signInPage = new SignInPage();
-        shoppingCart = new ShoppingCartPage();
-        searchResults = new SearchResultsPage();
+        driver = base.initialize();
+        landingPage = new LandingPage(driver);
+        signInPage = new SignInPage(driver);
+        shoppingCart = new ShoppingCartPage(driver);
+        searchResults = new SearchResultsPage(driver);
+        log.info("Initial setup completed");
 
     }
 
@@ -37,7 +39,12 @@ public class CorePathTests extends BaseTest {
         landingPage.navigateToURL("https://amazon.com");
    }
 
-   @Test (enabled = false)
+
+//   @AfterClass
+//   public void teardown(){
+//        driver.quit();
+//   }
+   @Test (priority=0)
    public void test_signin_search_checkout(){
        landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
        landingPage.selectLocation("56002");
@@ -64,11 +71,12 @@ public class CorePathTests extends BaseTest {
             } else
                 Assert.fail("Bounty chocolate not entered");
         } else
-            Assert.fail("Bounty chocolate not entered");
+            Assert.fail("Mars chocolate not entered");
+       landingPage.userSignOut();
    }
 
 
-    @Test
+    @Test  (priority=1,enabled = false)
     public void test_search_checkout_signin(){
         landingPage.selectLocation("56002");
         landingPage.searchForItem("Mars chocolate");

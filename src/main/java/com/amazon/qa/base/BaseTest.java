@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import com.amazon.qa.factory.DriverFactory;
 import com.amazon.qa.util.ConfigReader;
 import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import com.amazon.qa.util.TestUtil;
 
@@ -22,14 +23,8 @@ public class BaseTest {
     public WebDriver driver;
     Properties prop;
     private ConfigReader configReader;
-    //  public static EventFiringWebDriver e_driver;
-    //  public static WebEventListener listener;
 
-    public BaseTest(){
-        driver= DriverFactory.getDriver();
-    }
-
-    public void initialize() {
+    public WebDriver initialize() {
         configReader = new ConfigReader();
         prop = configReader.init_prop();
         String browserName = prop.getProperty("browser");
@@ -38,16 +33,17 @@ public class BaseTest {
 
 //        ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--enable-automation");
-//
+//        options.addArguments("--disable-dev-shm-usage");
 //        options.addArguments("--no-sandbox");
 //        options.addArguments("--disable-extensions");
 //        options.addArguments("--dns-prefetch-disable");
 //        options.addArguments("--disable-gpu");
 //        options.addArguments("--headless");
-//
 //        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+//        //K8S node : http://65.2.73.249:30000/wd/hub
+//  //      "http://10.60.28.135:4444"
 //        try {
-//            driver = new RemoteWebDriver(new URL("http://65.2.73.249:30000/wd/hub"),options);
+//            driver = new RemoteWebDriver(new URL("http://65.2.73.249:32237/wd/hub"),options);
 //        } catch (MalformedURLException e) {
 //            e.printStackTrace();
 //        }
@@ -55,6 +51,7 @@ public class BaseTest {
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().pageLoadTimeout(TestUtil.PAGE_LOAD_TIMEOUT, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(TestUtil.IMPLICIT_WAIT, TimeUnit.SECONDS);
+        return driver;
 
     }
 
