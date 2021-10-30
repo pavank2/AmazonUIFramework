@@ -9,9 +9,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class DriverFactory {
 
     private WebDriver driver;
-
     public static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<WebDriver>();
-
     /**
      * This method is used to initialize the threadlocal driver on the basis of given
      * browser
@@ -38,11 +36,7 @@ public class DriverFactory {
         return getDriver();
 
     }
-    /**
-     * this is used to get the driver with ThreadLocal
-     *
-     * @return
-     */
+
     public static synchronized WebDriver getDriver() {
         return tlDriver.get();
     }

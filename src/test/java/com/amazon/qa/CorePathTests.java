@@ -6,14 +6,21 @@ import com.amazon.qa.pages.SearchResultsPage;
 import com.amazon.qa.pages.ShoppingCartPage;
 import com.amazon.qa.pages.SignInPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.logging.Logger;
-
+/**
+ * Two E2E Tests for the two core paths for the Checkout functionality
+ * Test 1: User signs in, searches for two products, selects the cheapest available ones, adds them to cart and verifies the amount
+ * Test 2: Searches for products first, selects a single product, adds them to cart and verifies user sign in during checkout
+ * @Author: PK
+ *
+ */
 public class CorePathTests extends BaseTest {
     BaseTest base = new BaseTest();
     WebDriver driver;
@@ -40,44 +47,45 @@ public class CorePathTests extends BaseTest {
    }
 
 
-//   @AfterClass
-//   public void teardown(){
-//        driver.quit();
-//   }
+   @AfterClass
+   public void teardown(){
+        driver.quit();
+   }
    @Test (priority=0)
    public void test_signin_search_checkout(){
+       System.out.println("***TEST 001***");
        landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
        landingPage.selectLocation("56002");
-        float initialCartPrice = shoppingCart.getTotalPrice();
-        System.out.println(initialCartPrice);
-        if (landingPage.searchForItem("Mars chocolate")) {
-            float marsPrice = searchResults.selectCheapestChocolate("Mars");
-            System.out.println("Mars price: " + marsPrice);
-            if (landingPage.searchForItem("Bounty chocolate")) {
-                float bountyPrice = searchResults.selectCheapestChocolate("Bounty");
-                System.out.println("Bounty price: " + bountyPrice);
+       float initialCartPrice = shoppingCart.getTotalPrice();
+       System.out.println(initialCartPrice);
+       if (landingPage.searchForItem("Mars chocolate")) {
+           float marsPrice = searchResults.selectCheapestChocolate("Mars");
+           System.out.println("Mars price: " + marsPrice);
+           if (landingPage.searchForItem("Bounty chocolate")) {
+               float bountyPrice = searchResults.selectCheapestChocolate("Bounty");
+               System.out.println("Bounty price: " + bountyPrice);
 
-                float actualTotalPrice = marsPrice + bountyPrice;
+               float actualTotalPrice = marsPrice + bountyPrice;
 
-                System.out.println("Actual total price: " + actualTotalPrice);
-                float finalCartPrice = shoppingCart.getTotalPrice();
-                float expectedTotalPrice = finalCartPrice - initialCartPrice;
-
-                String roundedExpectedPrice = roundFloatValues(expectedTotalPrice);
-                System.out.println("Rounded expected price " + roundedExpectedPrice);
-                String roundedActualPrice = roundFloatValues(actualTotalPrice);
-                System.out.println("Rounded actual price " + roundedActualPrice);
-                Assert.assertEquals(roundedExpectedPrice, roundedActualPrice);
+               System.out.println("Actual total price: " + actualTotalPrice);
+               float finalCartPrice = shoppingCart.getTotalPrice();
+               float expectedTotalPrice = finalCartPrice - initialCartPrice;
+               String roundedExpectedPrice = roundFloatValues(expectedTotalPrice);
+               System.out.println("Rounded expected price " + roundedExpectedPrice);
+               String roundedActualPrice = roundFloatValues(actualTotalPrice);
+               System.out.println("Rounded actual price " + roundedActualPrice);
+               Assert.assertEquals(roundedExpectedPrice, roundedActualPrice);
             } else
-                Assert.fail("Bounty chocolate not entered");
+               Assert.fail("Bounty chocolate not entered");
         } else
             Assert.fail("Mars chocolate not entered");
        landingPage.userSignOut();
    }
 
 
-    @Test  (priority=1,enabled = false)
+    @Test  (priority=1)
     public void test_search_checkout_signin(){
+        System.out.println("***TEST 002***");
         landingPage.selectLocation("56002");
         landingPage.searchForItem("Mars chocolate");
         float marsPrice = searchResults.selectCheapestChocolate("Mars");

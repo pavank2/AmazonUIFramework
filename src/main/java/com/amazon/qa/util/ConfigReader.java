@@ -14,7 +14,6 @@ public class ConfigReader {
      * @return it returns Properties prop object
      */
     public Properties init_prop() {
-
         prop = new Properties();
         try {
             FileInputStream ip = new FileInputStream("./src/test/resources/config/config.properties");

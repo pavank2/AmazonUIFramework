@@ -1,16 +1,21 @@
 package com.amazon.qa.pages;
 
+import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.util.TestUtil;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import com.amazon.qa.base.BaseTest;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+/**
+ *  Page objects and methods for Main page for Amazon website which has the search bar,sign in option etc.
+ * @Author: PK
+ */
 public class LandingPage extends BaseTest {
     WebDriver driver;
     @FindBy(id="nav-link-accountList-nav-line-1")
@@ -24,7 +29,6 @@ public class LandingPage extends BaseTest {
     private WebElement searchButton;
 
 
-
     @FindBy(id="nav-global-location-popover-link")
     private WebElement deliveryLocation;
 
@@ -34,14 +38,14 @@ public class LandingPage extends BaseTest {
     @FindBy(id="GLUXZipUpdateInput")
     private WebElement zipCodeField;
 
-    @FindBy(css="div[role='button']")
+    @FindBy(css="input[class='a-button-input'][type='submit'][aria-labelledby='GLUXZipUpdate-announce']")
     private WebElement zipApplyButton;
 
     @FindBy (name="glowDoneButton")
-    private WebElement doneButton;
+    private List<WebElement> doneButton;
 
     @FindBy(id="nav-link-accountList")
-    private List<WebElement> signInMsg;
+    private WebElement signInMsg;
 
     @FindBy(id="nav-item-signout")
     private WebElement signOut;
@@ -55,16 +59,21 @@ public class LandingPage extends BaseTest {
     @FindBy(id="GLUXChangePostalCodeLink")
     private List<WebElement> changeZipCode;
 
+    @FindBy(xpath="//div[@class='a-popover-footer']//input[@id='GLUXConfirmClose']")
+    private List<WebElement> continueButton;
+
 
     public LandingPage(WebDriver driver) {
-     //   super();
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Select location specifying zipcode as Input
+     * @param zipCode
+     */
     public void selectLocation(String zipCode){
-
-     //If delivery location is not already selected
+     //If delivery location is not as expected
       if(!existingDeliveryLocation.getText().contains(zipCode)){
           deliveryLocation.click();
           if(TestUtil.checkElementExists(changeZipCode)) {
@@ -72,14 +81,36 @@ public class LandingPage extends BaseTest {
               zipCodeField.clear();
           }
           zipCodeField.sendKeys(zipCode);
-          TestUtil.sleepForNSeconds(2);
+          TestUtil.sleepForNSeconds(3);
           zipApplyButton.click();
+          TestUtil.sleepForNSeconds(3);
+
           if (TestUtil.checkElementExists(wrongZipCode)
                   && wrongZipCode.get(0).getAttribute("innerText").equals("Please enter a valid US zip code")) {
               throw new IllegalStateException("Wrong zip code entered");
           }
-          doneButton.click();
+          TestUtil.sleepForNSeconds(3);
+
+          if (TestUtil.checkElementExists(doneButton))
+            doneButton.get(0).click();
+          else if (TestUtil.checkElementExists(continueButton))
+              continueButton.get(0).click();
       }
+
+    }
+
+    /**
+     * Selection location for negative testcase with wrong zip code
+     * @param zipCode
+     */
+    public void selectLocationWrongZip(String zipCode){
+        deliveryLocation.click();
+        zipCodeField.sendKeys(zipCode);
+        zipApplyButton.click();
+        TestUtil.sleepForNSeconds(2);
+        if (TestUtil.checkElementExists(wrongZipCode)){
+            throw new IllegalStateException("Wrong zip code entered");
+        }
 
     }
 
@@ -98,9 +129,14 @@ public class LandingPage extends BaseTest {
         signInButton.click();
     }
 
+    /**
+     * Searches for Mars or Bounty chocolate
+     * @param item Takes chocolate as param
+     * @return Returns true if correct chocolate is entered
+     */
     public boolean searchForItem(String item){
        if (item.contains("Mars") || item.contains("Bounty")) {
-           TestUtil.sleepForNSeconds(3);
+          TestUtil.sleepForNSeconds(5);
            searchBar.sendKeys(item);
            searchButton.click();
            return true;
@@ -109,16 +145,19 @@ public class LandingPage extends BaseTest {
 
     }
 
-    public String getSignInMsg(){
-        if (TestUtil.checkElementExists(signInMsg)){
-            return signInMsg.get(0).getAttribute("innerText");
-        } else
-            return null;
-    }
+//    public String getSignInMsg(){
+//        if (TestUtil.checkElementExists(signInMsg)){
+//            return signInMsg.get(0).getAttribute("innerText");
+//        } else
+//            return null;
+//    }
 
      public void userSignOut(){
          Actions action  =new Actions(driver);
-         action.moveToElement(signInMsg.get(0)).build().perform();
+         WebDriverWait w =  new WebDriverWait(driver,10);
+         w.until(ExpectedConditions.visibilityOf(signInMsg));
+         action.moveToElement(signInMsg).build().perform();
+         w.until(ExpectedConditions.visibilityOf(signOut));
          signOut.click();
 //         if (TestUtil.checkElementExists(signInMsg))
 //             System.out.println("Signout successful");

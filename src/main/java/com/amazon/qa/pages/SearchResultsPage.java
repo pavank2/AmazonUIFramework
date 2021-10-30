@@ -3,7 +3,6 @@ package com.amazon.qa.pages;
 import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.util.TestUtil;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,6 +13,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+/**
+ * Page objects and methods for SearchResultsPage
+ * @Author: PK
+ */
 public class SearchResultsPage extends BaseTest {
    WebDriver driver;
     @FindBy(css = "li[aria-label='Free Shipping by Amazon']")
@@ -37,46 +40,47 @@ public class SearchResultsPage extends BaseTest {
     @FindBy(xpath="//span[contains(text(),'Added to Cart')]")
     private List<WebElement> cartAddSuccess;
 
+    @FindBy(xpath="//h1[contains(text(),'Added to Cart')]")
+    private List<WebElement> cartAddSuccess2;
+
+
 
     public SearchResultsPage(WebDriver driver ) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Seelcts the cheapest chocolate which is in stock and adds to cart
+     * @param choc
+     * @return
+     */
     public float selectCheapestChocolate(String choc){
        if (choc == "Mars" && TestUtil.checkElementExists(freeShipping))
          freeShipping.get(0).click();
-       if (choc == "Mars")
-            marsCheckBox.click();
-
         Select s = new Select(sortBy);
         s.selectByIndex(1);
         List<WebElement> chocolatesList = driver.findElements(By.cssSelector("div[class='a-section a-spacing-medium']"));
-
-        System.out.println(chocolatesList.size());
         float minPrice= 0;
         for (WebElement chocolate:chocolatesList){
             System.out.println("Looking for cheapest "+choc+" chocolate in stock. Please be patient...");
             By notInStock = By.xpath(".//span[@aria-label='In stock soon.']");
             By onlyOneInStock = By.xpath(".//span[@aria-label='Only 1 left in stock - order soon.']");
             By priceLocator = By.xpath(".//span[@class='a-price']//span[@class='a-offscreen']");
-
             if (!checkElementExists(chocolate,notInStock) && !checkElementExists(chocolate,onlyOneInStock)
                     && checkElementExists(chocolate,priceLocator)) {
                 WebElement priceElement = chocolate.findElement(priceLocator);
                 minPrice = Float.parseFloat(priceElement.getAttribute("innerText").substring(1));
-                System.out.println("minPrice: "+minPrice);
                 TestUtil.sleepForNSeconds(2);
                 chocolate.click();
                 break;
             }
         }
-
         TestUtil.checkElementExistsAndClick(oneTimeBuy);
         WebDriverWait w = new WebDriverWait(driver,10);
         w.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-to-cart-button")));
         addToCart.click();
-        if (!TestUtil.checkElementExists(cartAddSuccess)) {
+        if (!TestUtil.checkElementExists(cartAddSuccess) && !TestUtil.checkElementExists(cartAddSuccess2)) {
             System.out.println("ALERT!"+choc+" not added to cart");
             minPrice = 0;
         }

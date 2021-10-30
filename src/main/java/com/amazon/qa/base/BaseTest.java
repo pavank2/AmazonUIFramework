@@ -1,22 +1,11 @@
 package com.amazon.qa.base;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
 import com.amazon.qa.factory.DriverFactory;
 import com.amazon.qa.util.ConfigReader;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.Platform;
+import com.amazon.qa.util.TestUtil;
 import org.openqa.selenium.WebDriver;
-import com.amazon.qa.util.TestUtil;
 
-
-import com.amazon.qa.util.TestUtil;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
     DriverFactory driverFactory;
@@ -43,7 +32,7 @@ public class BaseTest {
 //        //K8S node : http://65.2.73.249:30000/wd/hub
 //  //      "http://10.60.28.135:4444"
 //        try {
-//            driver = new RemoteWebDriver(new URL("http://65.2.73.249:32237/wd/hub"),options);
+//            driver = new RemoteWebDriver(new URL("http://52.66.16.153:32237/wd/hub"),options);
 //        } catch (MalformedURLException e) {
 //            e.printStackTrace();
 //        }
