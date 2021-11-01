@@ -42,43 +42,47 @@ public class HelperFunctionTests extends BaseTest {
 
     @BeforeMethod
     public void user_navigates_to_website() {
-        log.info("Navigating to website");
         landingPage.navigateToURL("https://amazon.com");
+    }
+
+    /**
+     * User provides an invalid zipcode
+     */
+    @Test (expectedExceptions = {IllegalStateException.class},priority=2)
+    public void test_select_location_wrong_zipcode(){
+        System.out.println("***TEST 003***");
+
+        LandingPage page = new LandingPage(driver);
+        landingPage.selectLocationWrongZip("1234");
     }
 
     /**
      * User sign in with wrong credentials
      */
-    @Test (expectedExceptions = {IllegalStateException.class}, priority=2)
+    @Test (expectedExceptions = {IllegalStateException.class}, priority=3)
     public void test_sign_in_wrong_cred(){
-     landingPage.userSignIn("wrongmail@gmail.com","wrongPassword");
-
+        System.out.println("***TEST 004***");
+        landingPage.userSignIn("wrongmail@gmail.com","wrongPassword");
     }
 
     /**
      * User searches for random entry instead of Mars or Bounty
      */
-    @Test (priority=3)
+    @Test (priority=4)
     public void test_random_search_entry(){
+        System.out.println("***TEST 005***");
         Assert.assertEquals(false,landingPage.searchForItem("Random"));
     }
 
     /**
      * Check if user signed in successfully
      */
-    @Test (priority=4)
+    @Test (priority=5)
     public void user_signed_in_successfully(){
+        System.out.println("***TEST 006***");
+
         landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
         Assert.assertTrue(landingPage.checkUserSignedIn());
-    }
-
-    /**
-     * User provides an invalid zipcode
-     */
-    @Test (expectedExceptions = {IllegalStateException.class})
-    public void test_select_location_wrong_zipcode(){
-        LandingPage page = new LandingPage(driver);
-        landingPage.selectLocationWrongZip("1234");
     }
 
     @AfterClass

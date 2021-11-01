@@ -20,13 +20,11 @@ public class LandingPage extends BaseTest {
     @FindBy(id="nav-link-accountList-nav-line-1")
     private WebElement signInButton;
 
-
     @FindBy(id="twotabsearchtextbox")
     private WebElement searchBar;
 
     @FindBy(id="nav-search-submit-button")
     private WebElement searchButton;
-
 
     @FindBy(id="nav-global-location-popover-link")
     private WebElement deliveryLocation;
@@ -49,7 +47,6 @@ public class LandingPage extends BaseTest {
     @FindBy(xpath="//span[contains(text(),'Hello')]")
     private WebElement signedInMsg;
 
-
     @FindBy(id="nav-item-signout")
     private WebElement signOut;
 
@@ -64,7 +61,6 @@ public class LandingPage extends BaseTest {
 
     @FindBy(xpath="//div[@class='a-popover-footer']//input[@id='GLUXConfirmClose']")
     private List<WebElement> continueButton;
-
 
     public LandingPage(WebDriver driver) {
         this.driver = driver;
@@ -102,10 +98,15 @@ public class LandingPage extends BaseTest {
      */
     public void selectLocationWrongZip(String zipCode){
         deliveryLocation.click();
-        TestUtil.waitForElement(By.id("GLUXZipUpdateInput"));
+        TestUtil.sleepForNSeconds(3);
+        if(TestUtil.checkElementExists(changeZipCode)) {
+            changeZipCode.get(0).click();
+            zipCodeField.clear();
+            TestUtil.sleepForNSeconds(3);
+        }
         zipCodeField.sendKeys(zipCode);
         zipApplyButton.click();
-        TestUtil.sleepForNSeconds(2);
+        TestUtil.sleepForNSeconds(3);
         if (TestUtil.checkElementExists(wrongZipCode)){
             throw new IllegalStateException("Wrong zip code entered");
         }
@@ -123,7 +124,6 @@ public class LandingPage extends BaseTest {
     }
 
     public void clickSignIn() {
-
         signInButton.click();
     }
 
@@ -143,23 +143,16 @@ public class LandingPage extends BaseTest {
 
     }
 
-//    public String getSignInMsg(){
-//        if (TestUtil.checkElementExists(signInMsg)){
-//            return signInMsg.get(0).getAttribute("innerText");
-//        } else
-//            return null;
-//    }
-
-     public void userSignOut(){
+    public void userSignOut(){
          Actions action  = new Actions(driver);
-         TestUtil.sleepForNSeconds(2);
+         TestUtil.sleepForNSeconds(4);
          action.moveToElement(accountLabel).build().perform();
          TestUtil.sleepForNSeconds(2);
          signOut.click();
 
-     }
+    }
 
-     public boolean checkUserSignedIn(){
+    public boolean checkUserSignedIn(){
         return signInConfirmation.getAttribute("innerText").contains("Hello,");
      }
 

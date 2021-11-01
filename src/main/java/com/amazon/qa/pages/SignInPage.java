@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @Author: PK
  */
 public class SignInPage extends BaseTest {
- WebDriver driver;
+    WebDriver driver;
     @FindBy(id="ap_email")
     private WebElement email;
 

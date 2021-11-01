@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
  * @Author: PK
  */
 public class SearchResultsPage extends BaseTest {
-   WebDriver driver;
+    WebDriver driver;
     @FindBy(css = "li[aria-label='Free Shipping by Amazon']")
     private List<WebElement> freeShipping;
 
@@ -44,7 +44,6 @@ public class SearchResultsPage extends BaseTest {
     private List<WebElement> cartAddSuccess2;
 
 
-
     public SearchResultsPage(WebDriver driver ) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -59,8 +58,6 @@ public class SearchResultsPage extends BaseTest {
        if (choc == "Mars" && TestUtil.checkElementExists(freeShipping))
          freeShipping.get(0).click();
          selectFilterType("Price: Low to High");
-        //Select s = new Select(sortBy);
-        //s.selectByIndex(1);
         List<WebElement> chocolatesList = driver.findElements(By.cssSelector("div[class='a-section a-spacing-medium']"));
         float minPrice= 0;
         for (WebElement chocolate:chocolatesList){
@@ -96,9 +93,9 @@ public class SearchResultsPage extends BaseTest {
 
     public void selectFilterType(String option) {
         // Open the dropdown so the options are visible
-      TestUtil.sleepForNSeconds(4);
-       sortBy.click();
-       TestUtil.sleepForNSeconds(2);
+        TestUtil.sleepForNSeconds(4);
+        sortBy.click();
+        TestUtil.sleepForNSeconds(2);
         // Get all of the options
         List<WebElement> options = driver.findElements(By.xpath("//ul[@class='a-nostyle a-list-link']/li"));
         // Loop through the options and select the one that matches
@@ -108,7 +105,7 @@ public class SearchResultsPage extends BaseTest {
                 return;
             }
         }
-        throw new NoSuchElementException(option + "not found in dropdown");
+        throw new NoSuchElementException(option + " not found in dropdown");
     }
 
 }

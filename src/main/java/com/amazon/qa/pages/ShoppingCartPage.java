@@ -14,7 +14,7 @@ import java.util.List;
  * @Author: PK
  */
 public class ShoppingCartPage extends BaseTest {
- WebDriver driver;
+    WebDriver driver;
     @FindBy(css="span[id='sc-subtotal-amount-buybox'] span[class*='a-size-medium']")
     private WebElement totalPrice;
 

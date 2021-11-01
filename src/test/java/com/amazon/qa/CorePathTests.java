@@ -47,12 +47,13 @@ public class CorePathTests extends BaseTest {
    }
 
 
-   @AfterClass
-   public void teardown(){
+    @AfterClass
+    public void teardown(){
         driver.quit();
    }
-   @Test (priority=0)
-   public void test_signin_search_checkout(){
+
+    @Test (priority=0)
+    public void test_signin_search_checkout(){
        System.out.println("***TEST 001***");
        landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
        landingPage.selectLocation("56002");
