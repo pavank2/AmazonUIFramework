@@ -49,7 +49,7 @@ public class HelperFunctionTests extends BaseTest {
     /**
      * User sign in with wrong credentials
      */
-    @Test (expectedExceptions = {IllegalStateException.class})
+    @Test (expectedExceptions = {IllegalStateException.class}, priority=2)
     public void test_sign_in_wrong_cred(){
      landingPage.userSignIn("wrongmail@gmail.com","wrongPassword");
 
@@ -58,7 +58,7 @@ public class HelperFunctionTests extends BaseTest {
     /**
      * User searches for random entry instead of Mars or Bounty
      */
-    @Test
+    @Test (priority=3)
     public void test_random_search_entry(){
         Assert.assertEquals(false,landingPage.searchForItem("Random"));
     }
@@ -66,7 +66,7 @@ public class HelperFunctionTests extends BaseTest {
     /**
      * Check if user signed in successfully
      */
-    @Test
+    @Test (priority=4)
     public void user_signed_in_successfully(){
         landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
         Assert.assertTrue(landingPage.checkUserSignedIn());
@@ -78,8 +78,7 @@ public class HelperFunctionTests extends BaseTest {
     @Test (expectedExceptions = {IllegalStateException.class})
     public void test_select_location_wrong_zipcode(){
         LandingPage page = new LandingPage(driver);
-
-      landingPage.selectLocationWrongZip("1234");
+        landingPage.selectLocationWrongZip("1234");
     }
 
     @AfterClass

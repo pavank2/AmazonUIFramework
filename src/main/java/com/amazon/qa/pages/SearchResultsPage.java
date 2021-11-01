@@ -8,10 +8,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Page objects and methods for SearchResultsPage
@@ -28,7 +28,7 @@ public class SearchResultsPage extends BaseTest {
     @FindBy (css = "li[aria-label='Bounty']")
     private WebElement bountyCheckBox;
 
-    @FindBy(id="s-result-sort-select")
+    @FindBy(xpath="//span[@aria-label='Sort by:']//span[@data-action='a-dropdown-button']")
     private WebElement sortBy;
 
     @FindBy(id="newAccordionRow")
@@ -58,8 +58,9 @@ public class SearchResultsPage extends BaseTest {
     public float selectCheapestChocolate(String choc){
        if (choc == "Mars" && TestUtil.checkElementExists(freeShipping))
          freeShipping.get(0).click();
-        Select s = new Select(sortBy);
-        s.selectByIndex(1);
+         selectFilterType("Price: Low to High");
+        //Select s = new Select(sortBy);
+        //s.selectByIndex(1);
         List<WebElement> chocolatesList = driver.findElements(By.cssSelector("div[class='a-section a-spacing-medium']"));
         float minPrice= 0;
         for (WebElement chocolate:chocolatesList){
@@ -91,6 +92,23 @@ public class SearchResultsPage extends BaseTest {
     private boolean checkElementExists(WebElement element, By locator){
         System.out.println("Checking each condition");
         return element.findElements(locator).size() > 0;
+    }
+
+    public void selectFilterType(String option) {
+        // Open the dropdown so the options are visible
+      TestUtil.sleepForNSeconds(4);
+       sortBy.click();
+       TestUtil.sleepForNSeconds(2);
+        // Get all of the options
+        List<WebElement> options = driver.findElements(By.xpath("//ul[@class='a-nostyle a-list-link']/li"));
+        // Loop through the options and select the one that matches
+        for (WebElement opt : options) {
+            if (opt.getText().equals(option)) {
+                opt.click();
+                return;
+            }
+        }
+        throw new NoSuchElementException(option + "not found in dropdown");
     }
 
 }

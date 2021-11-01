@@ -41,7 +41,7 @@ public class SignInPage extends BaseTest {
     }
 
     public void enterEmailAndPassword(String mail,String pass){
-        driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
         email.sendKeys(mail);
         continueButton.click();
         password.sendKeys(pass);

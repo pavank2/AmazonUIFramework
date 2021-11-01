@@ -2,13 +2,12 @@ package com.amazon.qa.pages;
 
 import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.util.TestUtil;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
@@ -45,7 +44,11 @@ public class LandingPage extends BaseTest {
     private List<WebElement> doneButton;
 
     @FindBy(id="nav-link-accountList")
-    private WebElement signInMsg;
+    private WebElement accountLabel;
+
+    @FindBy(xpath="//span[contains(text(),'Hello')]")
+    private WebElement signedInMsg;
+
 
     @FindBy(id="nav-item-signout")
     private WebElement signOut;
@@ -75,26 +78,20 @@ public class LandingPage extends BaseTest {
     public void selectLocation(String zipCode){
      //If delivery location is not as expected
       if(!existingDeliveryLocation.getText().contains(zipCode)){
+          TestUtil.sleepForNSeconds(3);
           deliveryLocation.click();
+          TestUtil.sleepForNSeconds(3);
           if(TestUtil.checkElementExists(changeZipCode)) {
-              changeZipCode.get(0).click();
+            changeZipCode.get(0).click();
               zipCodeField.clear();
           }
           zipCodeField.sendKeys(zipCode);
-          TestUtil.sleepForNSeconds(3);
           zipApplyButton.click();
           TestUtil.sleepForNSeconds(3);
-
-          if (TestUtil.checkElementExists(wrongZipCode)
-                  && wrongZipCode.get(0).getAttribute("innerText").equals("Please enter a valid US zip code")) {
-              throw new IllegalStateException("Wrong zip code entered");
-          }
-          TestUtil.sleepForNSeconds(3);
-
           if (TestUtil.checkElementExists(doneButton))
             doneButton.get(0).click();
           else if (TestUtil.checkElementExists(continueButton))
-              continueButton.get(0).click();
+            continueButton.get(0).click();
       }
 
     }
@@ -105,6 +102,7 @@ public class LandingPage extends BaseTest {
      */
     public void selectLocationWrongZip(String zipCode){
         deliveryLocation.click();
+        TestUtil.waitForElement(By.id("GLUXZipUpdateInput"));
         zipCodeField.sendKeys(zipCode);
         zipApplyButton.click();
         TestUtil.sleepForNSeconds(2);
@@ -153,16 +151,11 @@ public class LandingPage extends BaseTest {
 //    }
 
      public void userSignOut(){
-         Actions action  =new Actions(driver);
-         WebDriverWait w =  new WebDriverWait(driver,10);
-         w.until(ExpectedConditions.visibilityOf(signInMsg));
-         action.moveToElement(signInMsg).build().perform();
-         w.until(ExpectedConditions.visibilityOf(signOut));
+         Actions action  = new Actions(driver);
+         TestUtil.sleepForNSeconds(2);
+         action.moveToElement(accountLabel).build().perform();
+         TestUtil.sleepForNSeconds(2);
          signOut.click();
-//         if (TestUtil.checkElementExists(signInMsg))
-//             System.out.println("Signout successful");
-//         else
-//             System.out.println("Signout unsuccessful. May impact next tests");
 
      }
 

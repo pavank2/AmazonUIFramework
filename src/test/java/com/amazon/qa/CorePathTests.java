@@ -43,7 +43,7 @@ public class CorePathTests extends BaseTest {
 
     @BeforeMethod
     public void user_navigates_to_website() {
-        landingPage.navigateToURL("https://amazon.com");
+        landingPage.navigateToURL("http://amazon.com");
    }
 
 
@@ -57,7 +57,7 @@ public class CorePathTests extends BaseTest {
        landingPage.userSignIn("getsugarasengan@gmail.com","temp1234");
        landingPage.selectLocation("56002");
        float initialCartPrice = shoppingCart.getTotalPrice();
-       System.out.println(initialCartPrice);
+       System.out.println("Initial cart price: "+initialCartPrice);
        if (landingPage.searchForItem("Mars chocolate")) {
            float marsPrice = searchResults.selectCheapestChocolate("Mars");
            System.out.println("Mars price: " + marsPrice);

@@ -3,13 +3,14 @@ package com.amazon.qa.util;
 import com.amazon.qa.base.BaseTest;
 import com.amazon.qa.factory.DriverFactory;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,16 @@ public class TestUtil extends BaseTest {
         if (elements.size() > 0 && elements.get(0).isDisplayed()){
           elements.get(0).click();
       }
-
   }
+
+    public static void waitForElement(By by) {
+       // WebDriverWait w = new WebDriverWait(driver,10);
+        //Declare and initialise a fluent wait
+        Wait wait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(10))
+            .pollingEvery(Duration.ofSeconds(1))
+            .ignoring(WebDriverException.class);
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+    }
 }

@@ -1,4 +1,5 @@
 package com.amazon.qa.base;
+
 import com.amazon.qa.factory.DriverFactory;
 import com.amazon.qa.util.ConfigReader;
 import com.amazon.qa.util.TestUtil;
@@ -19,23 +20,6 @@ public class BaseTest {
         String browserName = prop.getProperty("browser");
         driverFactory = new DriverFactory();
         driver = driverFactory.init_driver(browserName);
-
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--enable-automation");
-//        options.addArguments("--disable-dev-shm-usage");
-//        options.addArguments("--no-sandbox");
-//        options.addArguments("--disable-extensions");
-//        options.addArguments("--dns-prefetch-disable");
-//        options.addArguments("--disable-gpu");
-//        options.addArguments("--headless");
-//        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-//        //K8S node : http://65.2.73.249:30000/wd/hub
-//  //      "http://10.60.28.135:4444"
-//        try {
-//            driver = new RemoteWebDriver(new URL("http://52.66.16.153:32237/wd/hub"),options);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().pageLoadTimeout(TestUtil.PAGE_LOAD_TIMEOUT, TimeUnit.SECONDS);
@@ -45,4 +29,22 @@ public class BaseTest {
     }
 
 }
+/*************Code snippet for Remotewebdriver to run on Docker and K8S ************
+       ChromeOptions options = new ChromeOptions();
+        options.addArguments("--enable-automation");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--dns-prefetch-disable");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--headless");
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 
+  //    Docker config:  "http://10.60.28.135:4444"
+        try {
+            driver = new RemoteWebDriver(new URL("http://3.108.249.101:32237/wd/hub"),options);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+******************************************************/
