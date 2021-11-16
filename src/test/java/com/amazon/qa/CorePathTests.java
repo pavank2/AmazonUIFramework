@@ -59,27 +59,21 @@ public class CorePathTests extends BaseTest {
        landingPage.selectLocation("56002");
        float initialCartPrice = shoppingCart.getTotalPrice();
        System.out.println("Initial cart price: "+initialCartPrice);
-       if (landingPage.searchForItem("Mars chocolate")) {
-           float marsPrice = searchResults.selectCheapestChocolate("Mars");
-           System.out.println("Mars price: " + marsPrice);
-           if (landingPage.searchForItem("Bounty chocolate")) {
-               float bountyPrice = searchResults.selectCheapestChocolate("Bounty");
-               System.out.println("Bounty price: " + bountyPrice);
-
-               float actualTotalPrice = marsPrice + bountyPrice;
-
-               System.out.println("Actual total price: " + actualTotalPrice);
-               float finalCartPrice = shoppingCart.getTotalPrice();
-               float expectedTotalPrice = finalCartPrice - initialCartPrice;
-               String roundedExpectedPrice = roundFloatValues(expectedTotalPrice);
-               System.out.println("Rounded expected price " + roundedExpectedPrice);
-               String roundedActualPrice = roundFloatValues(actualTotalPrice);
-               System.out.println("Rounded actual price " + roundedActualPrice);
-               Assert.assertEquals(roundedExpectedPrice, roundedActualPrice);
-            } else
-               Assert.fail("Bounty chocolate not entered");
-        } else
-            Assert.fail("Mars chocolate not entered");
+       landingPage.searchForItem("Mars chocolate");
+       float marsPrice = searchResults.selectCheapestChocolate("Mars");
+       System.out.println("Mars price: " + marsPrice);
+       landingPage.searchForItem("Bounty chocolate");
+       float bountyPrice = searchResults.selectCheapestChocolate("Bounty");
+       System.out.println("Bounty price: " + bountyPrice);
+       float actualTotalPrice = marsPrice + bountyPrice;
+       System.out.println("Actual total price: " + actualTotalPrice);
+       float finalCartPrice = shoppingCart.getTotalPrice();
+       float expectedTotalPrice = finalCartPrice - initialCartPrice;
+       String roundedExpectedPrice = roundFloatValues(expectedTotalPrice);
+       System.out.println("Rounded expected price " + roundedExpectedPrice);
+       String roundedActualPrice = roundFloatValues(actualTotalPrice);
+       System.out.println("Rounded actual price " + roundedActualPrice);
+       Assert.assertEquals(roundedExpectedPrice, roundedActualPrice);
        landingPage.userSignOut();
    }
 

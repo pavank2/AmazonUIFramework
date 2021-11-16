@@ -3,8 +3,13 @@ package com.amazon.qa.base;
 import com.amazon.qa.factory.DriverFactory;
 import com.amazon.qa.util.ConfigReader;
 import com.amazon.qa.util.TestUtil;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
